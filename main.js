@@ -6,6 +6,7 @@ const user = {
   },
 };
 
+// ______________________________________________________________________
 function getUserLocation(event) {
   const clickedBtn = event.target;
   const container = clickedBtn.parentNode;
@@ -36,6 +37,7 @@ function getUserLocation(event) {
   }
 }
 
+// ______________________________________________________________________
 function shareLocation(event) {
   // Use clipboard API to copy the location to the clipboard
   event.preventDefault();
@@ -60,14 +62,14 @@ function shareLocation(event) {
     return;
   }
 
-  user.location.url += `&sp=point.${user.location.lat}_${
-    user.location.lng
-  }_${encodeURI(userName)}`;
+  user.location.url += `&sp=point.${user.location.lat}_${user.location.lng
+    }_${encodeURI(userName)}`;
 
   localStorage.setItem(userName, user.location.url);
   copyToClipboard(user.location.url, 'Location URL copied to clipboard.');
 }
 
+// ______________________________________________________________________
 function copyToClipboard(data, infoText) {
   if ('clipboard' in navigator) {
     navigator.clipboard.writeText(data).then(
@@ -83,6 +85,7 @@ function copyToClipboard(data, infoText) {
 
 let existingTimer;
 
+// ______________________________________________________________________
 function displayInfoMessage(message) {
   if (existingTimer) {
     clearTimeout(existingTimer);

@@ -4,7 +4,7 @@ describe('share location', () => {
   // * INFO: HOOK __________________________________________________________
   beforeEach(() => {
     cy.visit('/').then(win => {
-      return cy.stub(win.navigator.geolocation, 'getCurrentPosition')
+      cy.stub(win.navigator.geolocation, 'getCurrentPosition')
         .as('getUserPosition')
         .callsFake((cb) => {
           setTimeout(() => {
@@ -16,6 +16,9 @@ describe('share location', () => {
             });
           }, 100);
         })
+      cy.stub(win.navigator.clipboard, 'writeText')
+        .as('saveToClipboard')
+        .resolves();
     });
   })
   // ______________________________________________________________________
@@ -31,6 +34,7 @@ describe('share location', () => {
   it('should share a location URL', () => {
     cy.get('[data-cy="name-input"]').type('John Doe');
     cy.get('[data-cy="get-loc-btn"]').click();
-    // cy.get('[data-cy="actions"]').should('contain', 'Stored location URL copied to clipboard.');
+    cy.get('[data-cy="share-loc-btn"]').click();
+    cy.get('@saveToClipboard').should('have.been.called');
   });
 });

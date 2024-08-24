@@ -1,9 +1,10 @@
 /// <reference types="cypress" />
 
 describe('share location', () => {
-  // * INFO: HOOK __________________________________________________________
+  // * HACK: HOOK __________________________________________________________
   beforeEach(() => {
     cy.visit('/').then(win => {
+      // ______________________________________________________________________
       cy.stub(win.navigator.geolocation, 'getCurrentPosition')
         .as('getUserPosition')
         .callsFake((cb) => {
@@ -16,6 +17,7 @@ describe('share location', () => {
             });
           }, 100);
         })
+      // ______________________________________________________________________
       cy.stub(win.navigator.clipboard, 'writeText')
         .as('saveToClipboard')
         .resolves();
@@ -36,5 +38,11 @@ describe('share location', () => {
     cy.get('[data-cy="get-loc-btn"]').click();
     cy.get('[data-cy="share-loc-btn"]').click();
     cy.get('@saveToClipboard').should('have.been.called');
+    cy.get('@saveToClipboard').should(
+      'have.been.calledWithMatch',
+      new RegExp(`${37.5}.*${48.01}.*${encodeURI(
+        'John Doe'
+      )}`)
+    );
   });
 });
